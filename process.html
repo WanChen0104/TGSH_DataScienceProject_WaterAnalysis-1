@@ -1,0 +1,177 @@
+﻿<!DOCTYPE HTML>
+<!--
+	Urban by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>水資源分析與視覺化-研究過程</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="shortcut icon" href="favicon.ico" />
+	</head>
+	<body class="subpage">
+
+		<!-- Header -->
+			<header id="header">
+				<div class="logo"><a href="index.html">Update <span>by Penny&Jenny</span></a></div>
+				<a href="#menu">Menu</a>
+			</header>
+
+		<!-- Nav -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="index.html">首頁 index</a></li>
+					<li><a href="generic.html">研究過程 research process</a></li>
+					<li><a href="elements.html">分析與討論 Analysis</a></li>
+					<li><a href="poster.html">報告用海報 Poster</a></li>
+				</ul>
+			</nav>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- Section -->
+					<section class="wrapper">
+						<div class="inner">
+							<header class="align-center">
+								<h1>研究過程</h1>
+								<p>research process</p>
+								
+								<img src="images/research process.png" width=100%><P></P>
+									
+							</header>
+							<div class="flex flex-2">
+								<div class="col col2">
+									<h3>研究過程</h3>
+									<p>一、從政府開放資料平台將所需資料匯入並清理；大量資料如歷年各月各氣象站的降雨量則使用python網路爬蟲程式取得資料。<br>
+									二、將原始資料特徵化與格式處理後，使用視覺化工具gapminder產生圖表，對資料進行初步分析。<br>
+									三、依據製作的圖表討論問題，分析影響變化趨勢的原因，並呈現結果。<br></p>
+									<p>首先從水利署、中央氣象局等開放資料平台取得需要的原始資料後，檢查過濾、並整理，若遇到較複雜、大量的資料，例如:歷年歷月各氣象站觀測資料，就要寫python網路爬蟲程式來截取，再整理我們需要的格式。
+									再來使用統計程式gapminder和雲端資訊視覺化平台tableau public做出圖表，來將資料視覺化並分析，使我們更能看出資料的變化趨勢。
+									發現問題點後，到相關的網站或文獻查詢原因，比對資料中呈現的趨勢與變化的影響因素，之後得出結論。</p>
+									
+								</div>
+								<div class="col col1 first">
+									<br>
+									<br>
+									<div class="image fit">
+										<img src="images/waterglass.jpg" alt="" /></a>
+									</div>
+								</div>
+							</div>
+							<br><br>
+							<h3>使用工具-Web Crawler</h3>
+							<pre><code>
+import urllib
+import urllib.request
+from bs4 import BeautifulSoup
+import csv
+csvfile=open("20181103v2.csv","w",newline='')
+csvfile_year=open("20181103year.csv","w",newline='')
+writer_year=csv.writer(csvfile_year)
+writer=csv.writer(csvfile)
+writer.writerow(['年份','月份','測站','雨量'])
+writer_year.writerow(['年份','測站','雨量'])
+
+for y in range(1998,2019):
+    rainfallsum={}
+    for m in range(1,13):
+        urlstr="https://www.cwb.gov.tw/V7/climate/monthlyData/Data/mD"+str(y)+str(m)+".htm"
+        print(urlstr)
+        page=urllib.request.urlopen(urlstr).read()
+        soup=BeautifulSoup(page,"html.parser")
+        stories = soup.find_all('td')
+        j=14
+        sum_j=0
+        print("length=",len(stories))
+        for i in stories:
+            print(j,stories[j].text,stories[j+4].text)
+            writer.writerow([y,m,stories[j].text,stories[j+4].text])
+            if m==1 or rainfallsum.get(stories[j].text)==None:
+                rainfallsum[stories[j].text]=0
+            if stories[j+4].text=='T' or stories[j+4].text=='':
+                rainfallsum[stories[j].text]=rainfallsum[stories[j].text]+0
+            else:
+                rainfallsum[stories[j].text]=rainfallsum[stories[j].text]+round(float(stories[j+4].text),1)
+            if m==12:
+                writer_year.writerow([y,stories[j].text,rainfallsum[stories[j].text]])
+            if j+13 < len(stories):
+                j=j+12
+                sum_j=sum_j+1
+                print("j=",j)
+            else:
+                break
+#           writer_year.writerow([y,stories[j].text,rainfallsum])
+        if y==2018 and m==10:
+            break
+csvfile.close()
+csvfile_year.close()</code></pre>
+							<p></p>
+							<p></p>
+						</div>
+					</section>
+
+				<!-- Section -->
+					<section class="wrapper style1">
+						<div class="inner">
+							<header class="align-center">
+								<h2>專題報告團隊成員</h2>
+								<p>國立台東女子高級中學</p>
+							</header>
+							<div class="flex flex-3">
+								<div class="col align-center">
+									<div class="image round fit">
+										<img src="images/la04.png" alt="" />
+									</div>
+									<p>學生:二甲 賴凝香</p>
+									<p>電子信箱：penny103131@gmail.com</p>
+									<a href="mailto:penny103131@gmail.com" class="button">Contact us</a>
+								</div>
+								<div class="col align-center">
+									<div class="image round fit">
+										<img src="images/wu04.png" alt="" />
+									</div>
+									<p>學生:二甲 吳宛蓁</p>
+									<p>電子信箱：jenny0104.wu@gmail.com</p>
+									<a href="mailto:jenny0104.wu@gmail.com" class="button">contact us</a>
+								</div>
+								<div class="col align-center">
+									<div class="image round fit">
+										<img src="images/ch04.png" alt="" />
+									</div>
+									<p>台東大學指導老師：高嘉宏</p>
+									<p>電子信箱：chkao@nttu.edu.tw</p>
+									<a href="mailto:chkao@nttu.edu.tw" class="button">contact us</a>
+								</div>
+							</div>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="copyright">
+					<!--<ul class="icons">
+						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon fa-snapchat"><span class="label">Snapchat</span></a></li>-->
+					</ul>
+					<p>&copy; Untitled. All rights reserved.  <a href="http://www.tgsh.ttct.edu.tw/">國立台東女子高級中學</a></p>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
